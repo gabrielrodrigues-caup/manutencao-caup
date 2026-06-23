@@ -204,34 +204,6 @@
     .btn-submit:hover { opacity: 0.85; }
     .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* Config banner */
-    .config-banner {
-      background: #FAEEDA;
-      border: 0.5px solid #BA7517;
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      margin-bottom: 1rem;
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-    }
-    .config-banner i { font-size: 16px; color: #854F0B; margin-top: 1px; flex-shrink: 0; }
-    .config-banner p { font-size: 13px; color: #854F0B; line-height: 1.5; }
-    .config-banner a { color: #854F0B; font-weight: 600; }
-
-    .config-block { margin-bottom: 1rem; }
-    .config-block label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 5px; font-weight: 500; }
-    .config-block input {
-      width: 100%;
-      font-size: 13px;
-      padding: 8px 12px;
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-md);
-      font-family: inherit;
-      background: #fafaf8;
-    }
-    .config-block input:focus { outline: none; border-color: var(--border-hover); background: #fff; }
-
     /* Toast */
     #toast {
       position: fixed;
@@ -294,24 +266,7 @@
         <p>Sede Capital Upgrade</p>
       </div>
     </div>
-
-    <!-- Config banner (visível até URL ser configurada) -->
-    <div class="config-banner" id="config-banner">
-      <i class="ti ti-alert-circle"></i>
-      <p>Configure a URL do Google Apps Script abaixo para ativar o envio ao Sheets. <a href="#config-block-wrap">Ver campo ↓</a></p>
-    </div>
-
-    <!-- Config URL -->
-    <div id="config-block-wrap" class="config-block card">
-      <p class="section-label">Configuração de destino</p>
-      <label>URL do Google Apps Script (Web App)</label>
-      <input type="url" id="script-url" placeholder="https://script.google.com/macros/s/SEU_ID_AQUI/exec" oninput="saveUrl()" />
-      <p style="font-size:12px;color:var(--text-tertiary);margin-top:6px;line-height:1.6">
-        Publique o Apps Script como Web App e cole a URL aqui. Ela fica salva no navegador — não precisa configurar de novo.
-      </p>
-    </div>
-
-    <!-- Form -->
+<!-- Form -->
     <form id="main-form" onsubmit="return false">
 
       <!-- Solicitante -->
@@ -536,24 +491,12 @@
   <script>
     let selectedUrgency = '';
 
-    // Salva e carrega a URL do script no localStorage
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0DAFvFyF0dIFI9_K86FDwg-T9Y5FF5yYY-x7RG3cB-ktbgiT8VnvBzKgI60qeK4Dibg/exec';
+
     window.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('caup_script_url');
-      if (saved) {
-        document.getElementById('script-url').value = saved;
-        document.getElementById('config-banner').style.display = 'none';
-      }
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('data-execucao').min = today;
     });
-
-    function saveUrl() {
-      const url = document.getElementById('script-url').value.trim();
-      if (url) {
-        localStorage.setItem('caup_script_url', url);
-        document.getElementById('config-banner').style.display = 'none';
-      }
-    }
 
     function selectUrgency(btn) {
       document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('active'));
@@ -597,7 +540,7 @@
         return;
       }
 
-      const url = getVal('script-url') || localStorage.getItem('caup_script_url') || '';
+      const url = APPS_SCRIPT_URL;
 
       const payload = {
         timestamp:       new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
@@ -623,13 +566,7 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="ti ti-loader" style="font-size:15px"></i> Enviando...';
 
-      if (!url) {
-        showToast('⚠ Configure a URL do Apps Script primeiro.', false);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="ti ti-send" style="font-size:15px"></i> Enviar solicitação';
-        document.getElementById('script-url').focus();
-        return;
-      }
+
 
       try {
         await fetch(url, {
