@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solicitação de Manutenção — Capital Upgrade</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f3;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.12);
+      --border-hover: rgba(0,0,0,0.25);
+      --text-primary: #1a1a18;
+      --text-secondary: #666662;
+      --text-tertiary: #999994;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .page-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 2rem;
+    }
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .header-icon i { font-size: 22px; color: var(--text-secondary); }
+    .page-header h1 { font-size: 22px; font-weight: 600; line-height: 1.2; }
+    .page-header p { font-size: 14px; color: var(--text-secondary); margin-top: 3px; }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-tertiary);
+      margin-bottom: 14px;
+    }
+
+    /* Fields */
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      font-size: 14px;
+      color: var(--text-primary);
+      background: #fafaf8;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      font-family: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--border-hover);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+      background: #fff;
+    }
+    .field textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .badge-req { background: #EAF3DE; color: #3B6D11; }
+    .badge-opt { background: #f0f0ed; color: #888; }
+
+    /* Prefix input */
+    .prefix-wrap { position: relative; }
+    .prefix-wrap .prefix-text {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: var(--text-secondary);
+      pointer-events: none;
+    }
+    .prefix-wrap input { padding-left: 34px; }
+
+    /* Urgency */
+    .urgency-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 480px) { .urgency-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .urgency-btn {
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      background: #fafaf8;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      line-height: 1.3;
+    }
+    .urgency-btn:hover { border-color: var(--border-hover); background: #fff; }
+    .urgency-btn i { font-size: 20px; display: block; margin-bottom: 5px; }
+    .urgency-btn .sub { font-size: 10px; opacity: 0.65; display: block; margin-top: 3px; }
+
+    .urgency-btn.active.u1 { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+    .urgency-btn.active.u2 { background: #FAEEDA; border-color: #BA7517; color: #854F0B; }
+    .urgency-btn.active.u3 { background: #EAF3DE; border-color: #639922; color: #3B6D11; }
+    .urgency-btn.active.u4 { background: #E6F1FB; border-color: #378ADD; color: #185FA5; }
+
+    /* Submit */
+    .submit-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .required-note { font-size: 12px; color: var(--text-tertiary); }
+
+    .btn-submit {
+      background: var(--text-primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 11px 28px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.15s;
+    }
+    .btn-submit:hover { opacity: 0.85; }
+    .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Config banner */
+    .config-banner {
+      background: #FAEEDA;
+      border: 0.5px solid #BA7517;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .config-banner i { font-size: 16px; color: #854F0B; margin-top: 1px; flex-shrink: 0; }
+    .config-banner p { font-size: 13px; color: #854F0B; line-height: 1.5; }
+    .config-banner a { color: #854F0B; font-weight: 600; }
+
+    .config-block { margin-bottom: 1rem; }
+    .config-block label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 5px; font-weight: 500; }
+    .config-block input {
+      width: 100%;
+      font-size: 13px;
+      padding: 8px 12px;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      background: #fafaf8;
+    }
+    .config-block input:focus { outline: none; border-color: var(--border-hover); background: #fff; }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      padding: 10px 22px;
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s;
+      white-space: nowrap;
+      z-index: 1000;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Success screen */
+    #success-screen {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    #success-screen .check-circle {
+      width: 64px;
+      height: 64px;
+      background: #EAF3DE;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    #success-screen .check-circle i { font-size: 30px; color: #3B6D11; }
+    #success-screen h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+    #success-screen p { font-size: 14px; color: var(--text-secondary); margin-bottom: 1.5rem; }
+    #success-screen button {
+      background: none;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 9px 20px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--text-secondary);
+    }
+    #success-screen button:hover { background: var(--surface); }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-icon"><i class="ti ti-tool"></i></div>
+      <div>
+        <h1>Solicitação de manutenção</h1>
+        <p>Sede Capital Upgrade</p>
+      </div>
+    </div>
+
+    <!-- Config banner (visível até URL ser configurada) -->
+    <div class="config-banner" id="config-banner">
+      <i class="ti ti-alert-circle"></i>
+      <p>Configure a URL do Google Apps Script abaixo para ativar o envio ao Sheets. <a href="#config-block-wrap">Ver campo ↓</a></p>
+    </div>
+
+    <!-- Config URL -->
+    <div id="config-block-wrap" class="config-block card">
+      <p class="section-label">Configuração de destino</p>
+      <label>URL do Google Apps Script (Web App)</label>
+      <input type="url" id="script-url" placeholder="https://script.google.com/macros/s/SEU_ID_AQUI/exec" oninput="saveUrl()" />
+      <p style="font-size:12px;color:var(--text-tertiary);margin-top:6px;line-height:1.6">
+        Publique o Apps Script como Web App e cole a URL aqui. Ela fica salva no navegador — não precisa configurar de novo.
+      </p>
+    </div>
+
+    <!-- Form -->
+    <form id="main-form" onsubmit="return false">
+
+      <!-- Solicitante -->
+      <div class="card">
+        <p class="section-label">Solicitante</p>
+        <div class="row2">
+          <div class="field">
+            <label>Nome completo <span class="badge badge-req">obrigatório</span></label>
+            <input type="text" id="nome" placeholder="Seu nome completo" autocomplete="name" />
+          </div>
+          <div class="field">
+            <label>Departamento <span class="badge badge-req">obrigatório</span></label>
+            <select id="departamento">
+              <option value="">Selecione</option>
+              <option>Operações</option>
+              <option>Comercial</option>
+              <option>Marketing</option>
+              <option>Financeiro</option>
+              <option>Recursos Humanos</option>
+              <option>TI</option>
+              <option>Diretoria</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>E-mail corporativo <span class="badge badge-req">obrigatório</span></label>
+            <input type="email" id="email" placeholder="seu@capitalupgrade.com.br" autocomplete="email" />
+          </div>
+          <div class="field">
+            <label>Ramal / WhatsApp <span class="badge badge-opt">opcional</span></label>
+            <input type="text" id="contato" placeholder="(11) 9 0000-0000" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Manutenção -->
+      <div class="card">
+        <p class="section-label">Detalhes da manutenção</p>
+        <div class="field">
+          <label>Tipo de manutenção <span class="badge badge-req">obrigatório</span></label>
+          <select id="tipo">
+            <option value="">Selecione o tipo</option>
+            <optgroup label="Infraestrutura predial">
+              <option>Elétrica</option>
+              <option>Hidráulica / encanamento</option>
+              <option>Ar-condicionado / climatização</option>
+              <option>Pintura / paredes</option>
+              <option>Pisos e revestimentos</option>
+              <option>Telhado / impermeabilização</option>
+              <option>Vidros / esquadrias</option>
+              <option>Portas e fechaduras</option>
+            </optgroup>
+            <optgroup label="Mobiliário e instalações">
+              <option>Mobiliário (cadeiras, mesas, armários)</option>
+              <option>Iluminação</option>
+              <option>Sinalização</option>
+              <option>Limpeza especializada</option>
+            </optgroup>
+            <optgroup label="Tecnologia e segurança">
+              <option>Câmeras e segurança</option>
+              <option>Cabeamento de rede / telefonia</option>
+              <option>Projetores e audiovisual</option>
+              <option>Controle de acesso</option>
+            </optgroup>
+            <option>Outro (descrever abaixo)</option>
+          </select>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Localização na sede <span class="badge badge-req">obrigatório</span></label>
+            <select id="local">
+              <option value="">Selecione o espaço</option>
+              <option>Recepção</option>
+              <option>Sala de reunião 1</option>
+              <option>Sala de reunião 2</option>
+              <option>Sala de reunião 3</option>
+              <option>Auditório</option>
+              <option>Open space / escritório</option>
+              <option>Copa / cozinha</option>
+              <option>Banheiro masculino</option>
+              <option>Banheiro feminino</option>
+              <option>Banheiro PcD</option>
+              <option>Almoxarifado</option>
+              <option>Estacionamento</option>
+              <option>Área externa</option>
+              <option>Toda a sede</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Data desejada para execução <span class="badge badge-opt">opcional</span></label>
+            <input type="date" id="data-execucao" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Descrição detalhada do problema <span class="badge badge-req">obrigatório</span></label>
+          <textarea id="descricao" placeholder="Descreva o problema com o máximo de detalhes. O que aconteceu? Quando começou? Qual o impacto atual na operação?"></textarea>
+        </div>
+      </div>
+
+      <!-- Urgência -->
+      <div class="card">
+        <p class="section-label">Nível de urgência <span class="badge badge-req">obrigatório</span></p>
+        <div class="urgency-grid">
+          <button type="button" class="urgency-btn u1" data-val="Emergencial (risco imediato)" onclick="selectUrgency(this)">
+            <i class="ti ti-alert-triangle"></i>
+            Emergencial
+            <span class="sub">Risco imediato</span>
+          </button>
+          <button type="button" class="urgency-btn u2" data-val="Urgente (até 48h)" onclick="selectUrgency(this)">
+            <i class="ti ti-clock"></i>
+            Urgente
+            <span class="sub">Até 48 horas</span>
+          </button>
+          <button type="button" class="urgency-btn u3" data-val="Normal (até 7 dias)" onclick="selectUrgency(this)">
+            <i class="ti ti-calendar"></i>
+            Normal
+            <span class="sub">Até 7 dias</span>
+          </button>
+          <button type="button" class="urgency-btn u4" data-val="Planejada (sem urgência)" onclick="selectUrgency(this)">
+            <i class="ti ti-list-check"></i>
+            Planejada
+            <span class="sub">Sem urgência</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Custo e aprovação -->
+      <div class="card">
+        <p class="section-label">Custo e aprovação</p>
+        <div class="row2">
+          <div class="field">
+            <label>Custo estimado <span class="badge badge-opt">opcional</span></label>
+            <div class="prefix-wrap">
+              <span class="prefix-text">R$</span>
+              <input type="number" id="custo" placeholder="0,00" min="0" step="0.01" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Fornecedor em mente <span class="badge badge-opt">opcional</span></label>
+            <input type="text" id="fornecedor" placeholder="Nome da empresa / técnico" />
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Situação da aprovação</label>
+            <select id="aprovacao">
+              <option>Sim — aguardando aprovação do gestor</option>
+              <option>Já aprovado pelo gestor</option>
+              <option>Não necessita aprovação</option>
+              <option>Não sei informar</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Nome do aprovador <span class="badge badge-opt">opcional</span></label>
+            <input type="text" id="aprovador" placeholder="Gestor responsável" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Impacto -->
+      <div class="card">
+        <p class="section-label">Impacto e histórico</p>
+        <div class="row2">
+          <div class="field">
+            <label>Impacto operacional</label>
+            <select id="impacto">
+              <option value="">Selecione</option>
+              <option>Sem impacto atual</option>
+              <option>Impacto leve — incômodo para equipe</option>
+              <option>Impacto moderado — dificulta operação</option>
+              <option>Impacto severo — bloqueia atividades</option>
+              <option>Risco à segurança de pessoas</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Reincidência do problema</label>
+            <select id="reincidencia">
+              <option>Não — é a primeira vez</option>
+              <option>Sim — já ocorreu antes (1–2x)</option>
+              <option>Sim — problema recorrente (3x ou mais)</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Observações complementares <span class="badge badge-opt">opcional</span></label>
+          <textarea id="obs" placeholder="Horário de acesso permitido, restrições, contato no local, informações úteis para o técnico..." style="min-height:70px"></textarea>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-row">
+        <span class="required-note">
+          <i class="ti ti-info-circle" style="font-size:13px;vertical-align:-2px"></i>
+          Campos marcados como obrigatório precisam ser preenchidos
+        </span>
+        <button type="button" class="btn-submit" id="submit-btn" onclick="submitForm()">
+          <i class="ti ti-send" style="font-size:15px"></i>
+          Enviar solicitação
+        </button>
+      </div>
+
+    </form>
+
+    <!-- Success screen -->
+    <div id="success-screen">
+      <div class="check-circle"><i class="ti ti-check"></i></div>
+      <h2>Solicitação enviada!</h2>
+      <p>Sua solicitação foi registrada com sucesso no Google Sheets.<br>O time de operações irá analisar e dar retorno em breve.</p>
+      <button onclick="resetForm()">
+        <i class="ti ti-plus" style="font-size:13px;vertical-align:-2px"></i>
+        Nova solicitação
+      </button>
+    </div>
+
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    let selectedUrgency = '';
+
+    // Salva e carrega a URL do script no localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('caup_script_url');
+      if (saved) {
+        document.getElementById('script-url').value = saved;
+        document.getElementById('config-banner').style.display = 'none';
+      }
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('data-execucao').min = today;
+    });
+
+    function saveUrl() {
+      const url = document.getElementById('script-url').value.trim();
+      if (url) {
+        localStorage.setItem('caup_script_url', url);
+        document.getElementById('config-banner').style.display = 'none';
+      }
+    }
+
+    function selectUrgency(btn) {
+      document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedUrgency = btn.dataset.val;
+    }
+
+    function getVal(id) {
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    }
+
+    function validate() {
+      if (!getVal('nome'))         return ['nome', 'Preencha o nome do solicitante.'];
+      if (!getVal('departamento')) return ['departamento', 'Selecione o departamento.'];
+      const email = getVal('email');
+      if (!email || !email.includes('@')) return ['email', 'Informe um e-mail válido.'];
+      if (!getVal('tipo'))         return ['tipo', 'Selecione o tipo de manutenção.'];
+      if (!getVal('local'))        return ['local', 'Selecione a localização na sede.'];
+      if (!getVal('descricao'))    return ['descricao', 'Descreva o problema detalhadamente.'];
+      if (!selectedUrgency)        return [null, 'Selecione o nível de urgência.'];
+      return null;
+    }
+
+    function showToast(msg, ok) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.background = ok ? '#1D9E75' : '#E24B4A';
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    async function submitForm() {
+      const err = validate();
+      if (err) {
+        showToast('⚠ ' + err[1], false);
+        if (err[0]) {
+          const el = document.getElementById(err[0]);
+          if (el) { el.focus(); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        }
+        return;
+      }
+
+      const url = getVal('script-url') || localStorage.getItem('caup_script_url') || '';
+
+      const payload = {
+        timestamp:       new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+        nome:            getVal('nome'),
+        departamento:    getVal('departamento'),
+        email:           getVal('email'),
+        contato:         getVal('contato'),
+        tipo:            getVal('tipo'),
+        local:           getVal('local'),
+        data_execucao:   getVal('data-execucao'),
+        descricao:       getVal('descricao'),
+        urgencia:        selectedUrgency,
+        custo_estimado:  getVal('custo') ? 'R$ ' + parseFloat(getVal('custo')).toFixed(2) : '',
+        fornecedor:      getVal('fornecedor'),
+        aprovacao:       getVal('aprovacao'),
+        aprovador:       getVal('aprovador'),
+        impacto:         getVal('impacto'),
+        reincidencia:    getVal('reincidencia'),
+        observacoes:     getVal('obs')
+      };
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="ti ti-loader" style="font-size:15px"></i> Enviando...';
+
+      if (!url) {
+        showToast('⚠ Configure a URL do Apps Script primeiro.', false);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="ti ti-send" style="font-size:15px"></i> Enviar solicitação';
+        document.getElementById('script-url').focus();
+        return;
+      }
+
+      try {
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById('main-form').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) {
+        showToast('Erro ao enviar. Verifique a URL do Apps Script.', false);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="ti ti-send" style="font-size:15px"></i> Enviar solicitação';
+      }
+    }
+
+    function resetForm() {
+      ['nome','email','contato','descricao','custo','fornecedor','aprovador','obs','data-execucao']
+        .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      ['departamento','tipo','local','aprovacao','impacto','reincidencia']
+        .forEach(id => { const el = document.getElementById(id); if (el) el.selectedIndex = 0; });
+      document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('active'));
+      selectedUrgency = '';
+      document.getElementById('main-form').style.display = 'block';
+      document.getElementById('success-screen').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
